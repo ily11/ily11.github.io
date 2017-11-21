@@ -1,0 +1,848 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Angular," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="TypeScript基本类型在TypeScript中主要有以下基本数据类型：  布尔类型（boolean） 数字类型（number） 字符串类型（string） 数组类型（array） 元组类型（tuple） 枚举类型（enum） 任意值类型（any） null和undefined void类型 never类型其中元组、枚举、任意值、void类型和never类型是TypeScript有别于Java">
+<meta name="keywords" content="Angular">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Angular2 学习">
+<meta property="og:url" content="http://summer.com/2017/09/19/Angular2-学习/index.html">
+<meta property="og:site_name" content="ily的博客">
+<meta property="og:description" content="TypeScript基本类型在TypeScript中主要有以下基本数据类型：  布尔类型（boolean） 数字类型（number） 字符串类型（string） 数组类型（array） 元组类型（tuple） 枚举类型（enum） 任意值类型（any） null和undefined void类型 never类型其中元组、枚举、任意值、void类型和never类型是TypeScript有别于Java">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-09-25T08:17:49.856Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Angular2 学习">
+<meta name="twitter:description" content="TypeScript基本类型在TypeScript中主要有以下基本数据类型：  布尔类型（boolean） 数字类型（number） 字符串类型（string） 数组类型（array） 元组类型（tuple） 枚举类型（enum） 任意值类型（any） null和undefined void类型 never类型其中元组、枚举、任意值、void类型和never类型是TypeScript有别于Java">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":0},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://summer.com/2017/09/19/Angular2-学习/"/>
+
+
+
+
+
+  <title> Angular2 学习 | ily的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?b895f7692c1c70bdd79f8c79193af911";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ily的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://summer.com/2017/09/19/Angular2-学习/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="liyan">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/blog.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="ily的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="ily的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Angular2 学习
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-09-19T11:40:41+08:00">
+                2017-09-19
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/js/" itemprop="url" rel="index">
+                    <span itemprop="name">js</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/09/19/Angular2-学习/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/09/19/Angular2-学习/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="TypeScript"><a href="#TypeScript" class="headerlink" title="TypeScript"></a>TypeScript</h2><h3 id="基本类型"><a href="#基本类型" class="headerlink" title="基本类型"></a>基本类型</h3><p>在TypeScript中主要有以下基本数据类型：</p>
+<ul>
+<li>布尔类型（boolean）</li>
+<li>数字类型（number）</li>
+<li>字符串类型（string）</li>
+<li>数组类型（array）</li>
+<li>元组类型（tuple）</li>
+<li>枚举类型（enum）</li>
+<li>任意值类型（any）</li>
+<li>null和undefined</li>
+<li>void类型</li>
+<li>never类型<br>其中元组、枚举、任意值、void类型和never类型是TypeScript有别于JavaScript的特有类型。</li>
+</ul>
+<h4 id="元组类型"><a href="#元组类型" class="headerlink" title="元组类型"></a>元组类型</h4><p>用来表示已知元素数量和类型的数组，各元素的类型不必相同。示例代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">let x:[string,number];</div><div class="line">x = [&apos;Angular&apos;,25]; //运行正确</div><div class="line">x = [25,&apos;Angular&apos;]; //运行出错</div></pre></td></tr></table></figure></p>
+<h4 id="never类型"><a href="#never类型" class="headerlink" title="never类型"></a>never类型</h4><p>是其他类型（包括null和undefined）的子类型，代表从不会出现的值。这意味着声明为never类型的变量只能被never类型所赋值。</p>
+<h3 id="解构"><a href="#解构" class="headerlink" title="解构"></a>解构</h3><p>所谓解构，就是将声明的一组变量与相同结构的数组或者对象的元素数值一一对应，并将变量相对应元素进行赋值。解构可以帮助开发者非常容易地实现多返回值的场景。</p>
+<h4 id="数组解构"><a href="#数组解构" class="headerlink" title="数组解构"></a>数组解构</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">let input = [1,2];</div><div class="line">let [first,second] = input;</div><div class="line">console.log(first); //相当于input[0]:1</div><div class="line">console.log(second); //相当于input[1]:2</div></pre></td></tr></table></figure>
+<p>还可以在数组解构中使用rest参数语法（形式为“…变量名”）创建一个剩余变量列表，“…”三个连续小数点表示展开操作符，用于创建可变长的参数列表，实例代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">let [first,...rest] = [1,2,3,4];</div><div class="line">console.log(first); //输出1</div><div class="line">console.log(rest);  //输出[2,3,4]</div></pre></td></tr></table></figure></p>
+<h4 id="对象解构"><a href="#对象解构" class="headerlink" title="对象解构"></a>对象解构</h4><p>对象解构有趣的地方是一些原本需要多行编写的代码，用对象解构的方式编写一行代码就能完成，代码很简洁，可读性强：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">let test = &#123;x:0,y:10,width:15,height:20&#125;;</div><div class="line">let &#123;x,y,width,height&#125; = test;</div><div class="line">console.log(x,y,width,height); //输出0，10，15，20</div></pre></td></tr></table></figure></p>
+<h3 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h3><h4 id="可选参数"><a href="#可选参数" class="headerlink" title="可选参数"></a>可选参数</h4><p>在TypeScript里，被调函数的每个参数都是必传的：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">function max(x:number,y:number):number&#123;</div><div class="line">  return x&gt;y?x:y;</div><div class="line">&#125;</div><div class="line"></div><div class="line">let result1 = max(2); //报错</div><div class="line">let result2 = max(2,4); // 正确</div><div class="line">let result3 = max(2,4,7); // 报错</div></pre></td></tr></table></figure></p>
+<p>但是经常会遇到要根据实际需要来决定是否传入某个参数的情况，这时候可在参数名旁边加上?来使其变为可选参数：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">function max(x:number,y?:number):number&#123;</div><div class="line">  if(y)&#123;</div><div class="line">    return x&gt;y?x:y;</div><div class="line">  &#125;else&#123;</div><div class="line">    return x;</div><div class="line">  &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">let result1 = max(2); //正确</div><div class="line">let result2 = max(2,4); // 正确</div><div class="line">let result3 = max(2,4,7); // 报错</div></pre></td></tr></table></figure></p>
+<font color="red"><strong>注：可选参数必须位于必选参数的后面</strong></font>
+
+<h4 id="默认参数"><a href="#默认参数" class="headerlink" title="默认参数"></a>默认参数</h4><p>TypeScript还支持初始化默认参数。如果函数的某个参数设置了默认值，当该函数被调用的时候，如果没有给这个参数传值或者传的值为undefined时，这个参数的值就是设置的默认值：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">function max(x:number,y=4):number&#123;</div><div class="line">  return x&gt;y?x:y;</div><div class="line">&#125;</div><div class="line"></div><div class="line">let result1 = max(2); //正确</div><div class="line">let result2 = max(2,4); // 正确</div><div class="line">let result3 = max(2,4,7); // 报错</div><div class="line">let result4 = max(2,undefined);  //正确</div></pre></td></tr></table></figure></p>
+<p>带默认值的参数不必放在必选参数的后面，但<strong>如果默认值参数放在了必选参数的前面，用户必须显式地传入undefined:</strong><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">function max(x=2,y:number):number&#123;</div><div class="line">  return x&gt;y?x:y;</div><div class="line">&#125;</div><div class="line"></div><div class="line">let result1 = max(2); //报错</div><div class="line">let result2 = max(2,4); // 正确</div><div class="line">let result3 = max(2,4,7); // 报错</div><div class="line">let result4 = max(undefined,4); // 正确</div></pre></td></tr></table></figure></p>
+<h4 id="剩余参数"><a href="#剩余参数" class="headerlink" title="剩余参数"></a>剩余参数</h4><p>上面说的可选参数、必选参数和默认参数只能表示某一个参数，当同时需要操作多个参数的时候，就需要用到TypeScript里的剩余参数。在TypeScript里，所有的可选参数都可以放到一个变量里，示例代码如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">function sum(x:number,...restOfNumber:number[]):number&#123;</div><div class="line">  let result = x;</div><div class="line">  for(let i=0;i&lt;restOfNumber.length;i++)&#123;</div><div class="line">    result += restOfNumber[i];</div><div class="line">  &#125;</div><div class="line">  return result;</div><div class="line">&#125;</div><div class="line">let result = sum(1,2,3,4,5);</div><div class="line">console.log(result); //输出15</div></pre></td></tr></table></figure></p>
+<p><font color="red"><strong>注：剩余参数可以理解为个数不限的可选参数，即剩余参数包含的参数个数可以为零到多个</strong></font></p>
+<h2 id="组件"><a href="#组件" class="headerlink" title="组件"></a>组件</h2><h3 id="组件生命周期"><a href="#组件生命周期" class="headerlink" title="组件生命周期"></a>组件生命周期</h3><p>组件的生命周期由angular内部管理，从组件的创建、渲染，到数据变动时间的触发，再到组件从DOM移除，Angular都提供来一系列钩子，以下是组件常用的生命周期钩子方法，Angular会按以下的顺序依次调用：</p>
+<ul>
+<li>ngOnChanges</li>
+<li>ngOnInit</li>
+<li>ngDoCheck</li>
+<li>ngAfterContentInit</li>
+<li>ngAfterContentChecked</li>
+<li>ngAfterViewInit</li>
+<li>ngAfterViewChecked</li>
+<li>ngOnDestroy</li>
+</ul>
+<h4 id="ngOnChanges"><a href="#ngOnChanges" class="headerlink" title="ngOnChanges"></a>ngOnChanges</h4><p>它是用来响应组件输入值发生变化时触发的事件。该方法接收一个SimpleChanges对象，包括当前值和变化前的值。该方法在ngOnInit之前，或者当数据绑定输入属性的值发生变化时触发。</p>
+<p>只要在组件里定义来ngOnChanges方法，在输入数据发生变化时该方法就会被自动调用，这里的“输入数据”指的是通过@Input装饰器显式指定的那些变量。</p>
+<h4 id="ngOnInit"><a href="#ngOnInit" class="headerlink" title="ngOnInit"></a>ngOnInit</h4><p>ngOnInit钩子用于数据绑定输入属性之后初始化组件。在组件中，经常会使用ngOnInit获取数据。使用ngOnInit有以下两个原因：</p>
+<ul>
+<li>组件构造后不久就要进行复杂的初始化</li>
+<li>需要在输入属性设置完成后才构造组件</li>
+</ul>
+<p>在第一轮 ngOnChanges 完成之后调用。 ( 译注：也就是说当每个输入属性的值都被触发了一次 ngOnChanges 之后才会调用 ngOnInit ，此时所有输入属性都已经有了正确的初始绑定值 )</p>
+<h4 id="ngDoCheck"><a href="#ngDoCheck" class="headerlink" title="ngDoCheck"></a>ngDoCheck</h4><p>用于变化监测，该方法会在每次变化监测发生时被调用。</p>
+<p>绝大多数情况下，ngDoCheck和ngOnChanges不应该一起使用。ngOnChanges能做的事情，ngDoCheck也能做到，而且ngDoCheck监测的粒度更小，可以完成更灵活的变化监测逻辑。</p>
+<h4 id="ngAfterContentInit"><a href="#ngAfterContentInit" class="headerlink" title="ngAfterContentInit"></a>ngAfterContentInit</h4><p>在组件中使用<ng-content>将外部内容嵌入到组件视图后就会调用ngAfterContentInit，它在第一次ngDoCheck执行后调用，且只执行一次。当把内容投影进组件之后调用。</ng-content></p>
+<h4 id="ngAfterContentChecked"><a href="#ngAfterContentChecked" class="headerlink" title="ngAfterContentChecked"></a>ngAfterContentChecked</h4><p>在组件中使用<ng-content>自定义内容的情况下，Angular在这些外部内容嵌入到组件视图后，或者每次变化监测的时候都会调用ngAfterContentChecked。每次完成被投影组件内容的变更检测之后调用。</ng-content></p>
+<h4 id="ngAfterViewInit"><a href="#ngAfterViewInit" class="headerlink" title="ngAfterViewInit"></a>ngAfterViewInit</h4><p>初始化完组件视图及其子视图之后调用。</p>
+<p>会在Angular创建了组件的视图及其子视图后被调用。</p>
+<h4 id="ngAfterViewChecked"><a href="#ngAfterViewChecked" class="headerlink" title="ngAfterViewChecked"></a>ngAfterViewChecked</h4><p>每次做完组件视图和子视图的变更检测之后调用。</p>
+<p>在Angular创建了组件的视图及其子组件视图之后被调用一次，并且在每次子组件变化监测时也会被调用。</p>
+<h4 id="ngOnDestroy"><a href="#ngOnDestroy" class="headerlink" title="ngOnDestroy"></a>ngOnDestroy</h4><p>当 Angular 每次销毁指令 / 组件之前调用。</p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Angular/" rel="tag"># Angular</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/06/22/CSS-之position和transition/" rel="next" title="CSS 之position和transition">
+                <i class="fa fa-chevron-left"></i> CSS 之position和transition
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/09/29/Tool插件/" rel="prev" title="Linux下安装eclipse以及配置spring-tool-suite插件">
+                Linux下安装eclipse以及配置spring-tool-suite插件 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/09/19/Angular2-学习/"
+           data-title="Angular2 学习" data-url="http://summer.com/2017/09/19/Angular2-学习/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/blog.png"
+               alt="liyan" />
+          <p class="site-author-name" itemprop="name">liyan</p>
+           
+              <p class="site-description motion-element" itemprop="description">面向太阳，不问春暖花开，只求快乐面对</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">7</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/ily11" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/u/2157135103/home?topnav=1&wvr=6" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://fantasticzhang.gtensor.com/" title="fantastic" target="_blank">fantastic</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.airghc.top" title="airghc" target="_blank">airghc</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://ymwdq.github.io" title="ymwdq" target="_blank">ymwdq</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#TypeScript"><span class="nav-number">1.</span> <span class="nav-text">TypeScript</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#基本类型"><span class="nav-number">1.1.</span> <span class="nav-text">基本类型</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#元组类型"><span class="nav-number">1.1.1.</span> <span class="nav-text">元组类型</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#never类型"><span class="nav-number">1.1.2.</span> <span class="nav-text">never类型</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#解构"><span class="nav-number">1.2.</span> <span class="nav-text">解构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#数组解构"><span class="nav-number">1.2.1.</span> <span class="nav-text">数组解构</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#对象解构"><span class="nav-number">1.2.2.</span> <span class="nav-text">对象解构</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#函数"><span class="nav-number">1.3.</span> <span class="nav-text">函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#可选参数"><span class="nav-number">1.3.1.</span> <span class="nav-text">可选参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#默认参数"><span class="nav-number">1.3.2.</span> <span class="nav-text">默认参数</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#剩余参数"><span class="nav-number">1.3.3.</span> <span class="nav-text">剩余参数</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#组件"><span class="nav-number">2.</span> <span class="nav-text">组件</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#组件生命周期"><span class="nav-number">2.1.</span> <span class="nav-text">组件生命周期</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#ngOnChanges"><span class="nav-number">2.1.1.</span> <span class="nav-text">ngOnChanges</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ngOnInit"><span class="nav-number">2.1.2.</span> <span class="nav-text">ngOnInit</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ngDoCheck"><span class="nav-number">2.1.3.</span> <span class="nav-text">ngDoCheck</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ngAfterContentInit"><span class="nav-number">2.1.4.</span> <span class="nav-text">ngAfterContentInit</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ngAfterContentChecked"><span class="nav-number">2.1.5.</span> <span class="nav-text">ngAfterContentChecked</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ngAfterViewInit"><span class="nav-number">2.1.6.</span> <span class="nav-text">ngAfterViewInit</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ngAfterViewChecked"><span class="nav-number">2.1.7.</span> <span class="nav-text">ngAfterViewChecked</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#ngOnDestroy"><span class="nav-number">2.1.8.</span> <span class="nav-text">ngOnDestroy</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">liyan</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"ily11"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>
