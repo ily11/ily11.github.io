@@ -1,0 +1,812 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="logback," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="简介LogBack是由log4j的创始人开发的一个日志组件，用于替代log4j。LogBack的架构设计足够通用，可适用于不同的环境，目前LogBack分为三个模：lobback-core，logback-classic和logback-access。 core模块是其它两个模块的基础，classic是core的扩展，是log4j巨大改进的版本。LogBack-classic本身实现了SL4J的A">
+<meta name="keywords" content="logback">
+<meta property="og:type" content="article">
+<meta property="og:title" content="java学习之logback">
+<meta property="og:url" content="http://summer.com/2017/11/21/java学习之log日志/index.html">
+<meta property="og:site_name" content="ily的博客">
+<meta property="og:description" content="简介LogBack是由log4j的创始人开发的一个日志组件，用于替代log4j。LogBack的架构设计足够通用，可适用于不同的环境，目前LogBack分为三个模：lobback-core，logback-classic和logback-access。 core模块是其它两个模块的基础，classic是core的扩展，是log4j巨大改进的版本。LogBack-classic本身实现了SL4J的A">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-11-22T01:52:15.700Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="java学习之logback">
+<meta name="twitter:description" content="简介LogBack是由log4j的创始人开发的一个日志组件，用于替代log4j。LogBack的架构设计足够通用，可适用于不同的环境，目前LogBack分为三个模：lobback-core，logback-classic和logback-access。 core模块是其它两个模块的基础，classic是core的扩展，是log4j巨大改进的版本。LogBack-classic本身实现了SL4J的A">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":0},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://summer.com/2017/11/21/java学习之log日志/"/>
+
+
+
+
+
+  <title> java学习之logback | ily的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?b895f7692c1c70bdd79f8c79193af911";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ily的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://summer.com/2017/11/21/java学习之log日志/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="liyan">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/blog.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="ily的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="ily的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                java学习之logback
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-11-21T16:57:05+08:00">
+                2017-11-21
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/java/" itemprop="url" rel="index">
+                    <span itemprop="name">java</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2017/11/21/java学习之log日志/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2017/11/21/java学习之log日志/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>LogBack是由log4j的创始人开发的一个日志组件，用于替代log4j。LogBack的架构设计足够通用，可适用于不同的环境，目前LogBack分为三个模：lobback-core，logback-classic和logback-access。</p>
+<p>core模块是其它两个模块的基础，classic是core的扩展，是log4j巨大改进的版本。LogBack-classic本身实现了SL4J的API，因此可以很容易的在logback与其它日志系统之间转换，例如log4j、JDK1.4中的java.util.logging（JUL）。第三个模块access，它集成了Servlet容器，提供了通过HTTP访问日志的功能。</p>
+<p>在项目里添加依赖（gradle）：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">dependencies &#123;</div><div class="line">    def logbackVersion = &apos;1.2.1&apos;</div><div class="line">    // The production code uses the SLF4J logging API at compile time</div><div class="line">    compile &apos;org.slf4j:slf4j-api:1.7.13&apos;</div><div class="line">    compile &quot;ch.qos.logback:logback-core:$&#123;logbackVersion&#125;&quot;</div><div class="line">    compile &quot;ch.qos.logback:logback-access:$&#123;logbackVersion&#125;&quot;</div><div class="line">    compile &quot;ch.qos.logback:logback-classic:$&#123;logbackVersion&#125;&quot;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="Logback的核心对象：Logger、Appender、Layout"><a href="#Logback的核心对象：Logger、Appender、Layout" class="headerlink" title="Logback的核心对象：Logger、Appender、Layout"></a>Logback的核心对象：Logger、Appender、Layout</h3><p>Logback主要建立于Logger、Appender 和 Layout 这三个类之上：</p>
+<ul>
+<li>Logger：日志的记录器，把它关联到应用的对应的context上后，主要用于存放日志对象，也可以定义日志类型、级别。Logger对象一般多定义为静态变量：<br><code>public  static final Logger logger = LoggerFactory.getLogger(loggerName);</code></li>
+<li>Appender:用于指定日志输出的目的地，目的地可以是控制台、文件、远程套接字服务器、 MySQL、 PostreSQL、Oracle和其他数据库、 JMS和远程UNIX Syslog守护进程等。一般在配置的时候用到。</li>
+<li>Layout:负责把事件转换成字符串，格式化的日志信息的输出。</li>
+</ul>
+<h3 id="Level-有效级别"><a href="#Level-有效级别" class="headerlink" title="Level 有效级别"></a>Level 有效级别</h3><p>LogBack的日志级别有trace、debug、info、warn、error，级别依次递增，定义于ch.qos.logback.classic.Level类。程序会打印高于或等于所设置级别的日志，设置的日志等级越高，打印出来的日志就越少。如果设置级别为INFO，则优先级高于等于INFO级别（如：INFO、 WARN、ERROR）的日志信息将可以被输出,小于该级别的如DEBUG将不会被输出。默认情况下，根logger级别是DEBUG。</p>
+<h3 id="过滤器"><a href="#过滤器" class="headerlink" title="过滤器"></a>过滤器</h3><p>过滤器的返回值只能是ACCEPT、DENY和NEUTRAL的其中一个：</p>
+<ul>
+<li>如果返回DENY，那么记录事件立即被抛弃，不再经过剩余过滤器；</li>
+<li>如果返回NEUTRAL，那么有序列表里的下一个过滤器会接着处理记录事件；</li>
+<li>如果返回ACCEPT，那么记录事件被立即处理，不再经过剩余过滤器。</li>
+</ul>
+<h3 id="配置"><a href="#配置" class="headerlink" title="配置"></a>配置</h3><p>LogBack可以通过编程式或以XML、Groovy格式配置，LogBack读取配置或属性文件的步骤：</p>
+<p>1.logback首先会试着查找logback.groovy文件;</p>
+<p>2.当没有找到时，继续试着查找logback-test.xml文件;</p>
+<p>3.当没有找到时，继续试着查找logback.xml文件;</p>
+<p>4.如果仍然没有找到，则使用默认配置（打印到控制台）。</p>
+<p>本人项目的配置是在logback.groovy里的，示例如下：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div></pre></td><td class="code"><pre><div class="line">import ch.qos.logback.core.filter.EvaluatorFilter</div><div class="line">import ch.qos.logback.classic.boolex.GEventEvaluator</div><div class="line">import ch.qos.logback.core.util.FileSize</div><div class="line">import static ch.qos.logback.classic.Level.INFO</div><div class="line">import static ch.qos.logback.core.spi.FilterReply.DENY</div><div class="line">import static ch.qos.logback.core.spi.FilterReply.NEUTRAL</div><div class="line"></div><div class="line"></div><div class="line">def userDir = System.getProperty(&quot;user.dir&quot;)</div><div class="line">//配置输出info信息</div><div class="line">appender(&quot;FILE&quot;, RollingFileAppender) &#123;</div><div class="line">    append =true</div><div class="line">    rollingPolicy(TimeBasedRollingPolicy) &#123;</div><div class="line">      //输出文件路径</div><div class="line">        fileNamePattern = userDir+&quot;/logs/%d&#123;yyyy-MM-dd&#125;_info.log&quot;</div><div class="line">        maxHistory = 30 // controls the maximum number of archive files to keep, asynchronously deleting older files</div><div class="line">        totalSizeCap = FileSize.valueOf(&quot;3 gb&quot;)</div><div class="line">    &#125;</div><div class="line">    encoder(PatternLayoutEncoder) &#123;</div><div class="line">        pattern = &apos;%d&#123;yyyy-MM-dd HH:mm:ss&#125; [%thread] %-5level  %logger - %msg%n&apos;</div><div class="line">    &#125;</div><div class="line">    filter(EvaluatorFilter) &#123;</div><div class="line">        evaluator(GEventEvaluator) &#123;</div><div class="line">            expression = &apos;e.level.toInt() &lt;= INFO.toInt()&apos;</div><div class="line">        &#125;</div><div class="line">        onMatch = NEUTRAL</div><div class="line">        onMismatch = DENY</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">appender(&quot;ERROR_FILE&quot;, RollingFileAppender) &#123;</div><div class="line">    append =true</div><div class="line">    rollingPolicy(TimeBasedRollingPolicy) &#123;</div><div class="line">        fileNamePattern =  userDir+&quot;/logs/%d&#123;yyyy-MM-dd&#125;_error.log&quot;</div><div class="line">        maxHistory = 30 // controls the maximum number of archive files to keep, asynchronously deleting older files</div><div class="line">        totalSizeCap = FileSize.valueOf(&quot;3 gb&quot;)</div><div class="line">    &#125;</div><div class="line">    encoder(PatternLayoutEncoder) &#123;</div><div class="line">        pattern = &apos;%d&#123;yyyy-MM-dd HH:mm:ss&#125; [%thread] %-5level  %logger - %msg%n&apos;</div><div class="line">    &#125;</div><div class="line">    filter(EvaluatorFilter) &#123;</div><div class="line">        evaluator(GEventEvaluator) &#123;</div><div class="line">            expression = &apos;e.level.toInt() &gt; INFO.toInt()&apos;</div><div class="line">        &#125;</div><div class="line">        onMatch = NEUTRAL</div><div class="line">        onMismatch = DENY</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">appender(&quot;CONSOLE&quot;, ConsoleAppender) &#123;</div><div class="line">    encoder(PatternLayoutEncoder) &#123;</div><div class="line">        pattern = &apos;%d&#123;yyyy-MM-dd HH:mm:ss&#125; [%thread] %-5level  %logger - %msg%n&apos;</div><div class="line">    &#125;</div><div class="line">    filter(EvaluatorFilter) &#123;</div><div class="line">        evaluator(GEventEvaluator) &#123;</div><div class="line">            expression = &apos;e.level.toInt() &gt;= INFO.toInt()&apos;</div><div class="line">        &#125;</div><div class="line">        onMatch = NEUTRAL</div><div class="line">        onMismatch = DENY</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">root(INFO, [&quot;CONSOLE&quot;, &quot;ERROR_FILE&quot;, &quot;FILE&quot;])</div></pre></td></tr></table></figure></p>
+<p>下面贴出的是参考网上来自<a href="http://blog.csdn.net/wangdongsong1229/article/details/17463113" target="_blank" rel="external">LogBack——LogBack在项目（Web或Java）中的应用</a>的logback.xml的配置:<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div><div class="line">53</div><div class="line">54</div><div class="line">55</div><div class="line">56</div><div class="line">57</div><div class="line">58</div><div class="line">59</div><div class="line">60</div><div class="line">61</div><div class="line">62</div><div class="line">63</div><div class="line">64</div><div class="line">65</div><div class="line">66</div><div class="line">67</div><div class="line">68</div><div class="line">69</div><div class="line">70</div><div class="line">71</div><div class="line">72</div><div class="line">73</div><div class="line">74</div><div class="line">75</div><div class="line">76</div><div class="line">77</div><div class="line">78</div><div class="line">79</div><div class="line">80</div><div class="line">81</div><div class="line">82</div><div class="line">83</div><div class="line">84</div><div class="line">85</div><div class="line">86</div><div class="line">87</div><div class="line">88</div><div class="line">89</div><div class="line">90</div><div class="line">91</div><div class="line">92</div><div class="line">93</div><div class="line">94</div><div class="line">95</div><div class="line">96</div><div class="line">97</div><div class="line">98</div><div class="line">99</div><div class="line">100</div><div class="line">101</div><div class="line">102</div><div class="line">103</div><div class="line">104</div><div class="line">105</div><div class="line">106</div><div class="line">107</div><div class="line">108</div><div class="line">109</div><div class="line">110</div><div class="line">111</div><div class="line">112</div><div class="line">113</div><div class="line">114</div><div class="line">115</div><div class="line">116</div><div class="line">117</div><div class="line">118</div><div class="line">119</div><div class="line">120</div><div class="line">121</div><div class="line">122</div><div class="line">123</div><div class="line">124</div><div class="line">125</div><div class="line">126</div><div class="line">127</div><div class="line">128</div><div class="line">129</div><div class="line">130</div><div class="line">131</div><div class="line">132</div><div class="line">133</div><div class="line">134</div><div class="line">135</div><div class="line">136</div><div class="line">137</div><div class="line">138</div><div class="line">139</div><div class="line">140</div><div class="line">141</div><div class="line">142</div><div class="line">143</div><div class="line">144</div><div class="line">145</div><div class="line">146</div><div class="line">147</div><div class="line">148</div><div class="line">149</div></pre></td><td class="code"><pre><div class="line">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;  </div><div class="line">&lt;!--   </div><div class="line">    说明：  </div><div class="line">    1、日志级别及文件  </div><div class="line">        日志记录采用分级记录，级别与日志文件名相对应，不同级别的日志信息记录到不同的日志文件中  </div><div class="line">        例如：error级别记录到log_error_xxx.log或log_error.log（该文件为当前记录的日志文件），而log_error_xxx.log为归档日志，  </div><div class="line">        日志文件按日期记录，同一天内，若日志文件大小等于或大于2M，则按0、1、2...顺序分别命名  </div><div class="line">        例如log-level-2013-12-21.0.log  </div><div class="line">        其它级别的日志也是如此。  </div><div class="line">    2、文件路径  </div><div class="line">        若开发、测试用，在Eclipse中运行项目，则到Eclipse的安装路径查找logs文件夹，以相对路径../logs。  </div><div class="line">        若部署到Tomcat下，则在Tomcat下的logs文件中  </div><div class="line">    3、Appender  </div><div class="line">        FILEERROR对应error级别，文件名以log-error-xxx.log形式命名  </div><div class="line">        FILEWARN对应warn级别，文件名以log-warn-xxx.log形式命名  </div><div class="line">        FILEINFO对应info级别，文件名以log-info-xxx.log形式命名  </div><div class="line">        FILEDEBUG对应debug级别，文件名以log-debug-xxx.log形式命名  </div><div class="line">        stdout将日志信息输出到控制上，为方便开发测试使用  </div><div class="line"> --&gt;  </div><div class="line">&lt;configuration&gt;  </div><div class="line"></div><div class="line">    &lt;!-- 在Eclipse中运行，请到Eclipse的安装目录中找log文件，Tomcat下，请到Tomcat目录下找 --&gt;  </div><div class="line">    &lt;property name=&quot;LOG_PATH&quot; value=&quot;../logs&quot; /&gt;  </div><div class="line"></div><div class="line">    &lt;!-- 日志记录器，日期滚动记录 --&gt;  </div><div class="line">    &lt;appender name=&quot;FILEERROR&quot; class=&quot;ch.qos.logback.core.rolling.RollingFileAppender&quot;&gt;  </div><div class="line">        &lt;!-- 正在记录的日志文件的路径及文件名 --&gt;  </div><div class="line">        &lt;file&gt;$&#123;LOG_PATH&#125;/log_error.log&lt;/file&gt;  </div><div class="line">        &lt;!-- 日志记录器的滚动策略，按日期，按大小记录 --&gt;  </div><div class="line">        &lt;rollingPolicy class=&quot;ch.qos.logback.core.rolling.TimeBasedRollingPolicy&quot;&gt;  </div><div class="line">            &lt;!-- 归档的日志文件的路径，例如今天是2013-12-21日志，当前写的日志文件路径为file节点指定，可以将此文件与file指定文件路径设置为不同路径，从而将当前日志文件或归档日志文件置不同的目录。  </div><div class="line">            而2013-12-21的日志文件在由fileNamePattern指定。%d&#123;yyyy-MM-dd&#125;指定日期格式，%i指定索引 --&gt;  </div><div class="line">            &lt;fileNamePattern&gt;$&#123;LOG_PATH&#125;/log-error-%d&#123;yyyy-MM-dd&#125;.%i.log&lt;/fileNamePattern&gt;  </div><div class="line">            &lt;!-- 除按日志记录之外，还配置了日志文件不能超过2M，若超过2M，日志文件会以索引0开始，  </div><div class="line">            命名日志文件，例如log-error-2013-12-21.0.log --&gt;  </div><div class="line">            &lt;timeBasedFileNamingAndTriggeringPolicy class=&quot;ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP&quot;&gt;  </div><div class="line">                &lt;maxFileSize&gt;2MB&lt;/maxFileSize&gt;  </div><div class="line">            &lt;/timeBasedFileNamingAndTriggeringPolicy&gt;  </div><div class="line">        &lt;/rollingPolicy&gt;  </div><div class="line">        &lt;!-- 追加方式记录日志 --&gt;  </div><div class="line">        &lt;append&gt;true&lt;/append&gt;  </div><div class="line">        &lt;!-- 日志文件的格式 --&gt;  </div><div class="line">        &lt;encoder class=&quot;ch.qos.logback.classic.encoder.PatternLayoutEncoder&quot;&gt;  </div><div class="line">            &lt;pattern&gt;%-5p [%d] %C:%L - %m %n&lt;/pattern&gt;  </div><div class="line">            &lt;charset&gt;utf-8&lt;/charset&gt;  </div><div class="line">        &lt;/encoder&gt;  </div><div class="line">        &lt;!-- 此日志文件只记录error级别的 --&gt;  </div><div class="line">        &lt;filter class=&quot;ch.qos.logback.classic.filter.LevelFilter&quot;&gt;  </div><div class="line">            &lt;level&gt;error&lt;/level&gt;  </div><div class="line">            &lt;onMatch&gt;ACCEPT&lt;/onMatch&gt;  </div><div class="line">            &lt;onMismatch&gt;DENY&lt;/onMismatch&gt;  </div><div class="line">        &lt;/filter&gt;  </div><div class="line">    &lt;/appender&gt;  </div><div class="line"></div><div class="line">    &lt;appender name=&quot;FILEWARN&quot; class=&quot;ch.qos.logback.core.rolling.RollingFileAppender&quot;&gt;  </div><div class="line">        &lt;file&gt;$&#123;LOG_PATH&#125;/log_warn.log&lt;/file&gt;  </div><div class="line">        &lt;rollingPolicy class=&quot;ch.qos.logback.core.rolling.TimeBasedRollingPolicy&quot;&gt;  </div><div class="line">            &lt;fileNamePattern&gt;$&#123;LOG_PATH&#125;/log-warn-%d&#123;yyyy-MM-dd&#125;.%i.log&lt;/fileNamePattern&gt;  </div><div class="line">            &lt;timeBasedFileNamingAndTriggeringPolicy class=&quot;ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP&quot;&gt;  </div><div class="line">                &lt;maxFileSize&gt;2MB&lt;/maxFileSize&gt;  </div><div class="line">            &lt;/timeBasedFileNamingAndTriggeringPolicy&gt;  </div><div class="line">        &lt;/rollingPolicy&gt;  </div><div class="line">        &lt;append&gt;true&lt;/append&gt;  </div><div class="line">        &lt;encoder class=&quot;ch.qos.logback.classic.encoder.PatternLayoutEncoder&quot;&gt;  </div><div class="line">            &lt;pattern&gt;%-5p [%d] %C:%L - %m %n&lt;/pattern&gt;  </div><div class="line">            &lt;charset&gt;utf-8&lt;/charset&gt;  </div><div class="line">        &lt;/encoder&gt;  </div><div class="line">        &lt;!-- 此日志文件只记录warn级别，不记录大于warn级别的日志 --&gt;  </div><div class="line">        &lt;filter class=&quot;ch.qos.logback.classic.filter.LevelFilter&quot;&gt;  </div><div class="line">            &lt;level&gt;WARN&lt;/level&gt;  </div><div class="line">            &lt;onMatch&gt;ACCEPT&lt;/onMatch&gt;  </div><div class="line">            &lt;onMismatch&gt;DENY&lt;/onMismatch&gt;  </div><div class="line">        &lt;/filter&gt;  </div><div class="line">    &lt;/appender&gt;  </div><div class="line"></div><div class="line">    &lt;appender name=&quot;FILEINFO&quot; class=&quot;ch.qos.logback.core.rolling.RollingFileAppender&quot;&gt;  </div><div class="line">        &lt;file&gt;$&#123;LOG_PATH&#125;/log_info.log&lt;/file&gt;  </div><div class="line">        &lt;rollingPolicy class=&quot;ch.qos.logback.core.rolling.TimeBasedRollingPolicy&quot;&gt;  </div><div class="line">            &lt;fileNamePattern&gt;$&#123;LOG_PATH&#125;/log-info-%d&#123;yyyy-MM-dd&#125;.%i.log&lt;/fileNamePattern&gt;  </div><div class="line">            &lt;timeBasedFileNamingAndTriggeringPolicy class=&quot;ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP&quot;&gt;  </div><div class="line">                &lt;maxFileSize&gt;2MB&lt;/maxFileSize&gt;  </div><div class="line">            &lt;/timeBasedFileNamingAndTriggeringPolicy&gt;  </div><div class="line">        &lt;/rollingPolicy&gt;  </div><div class="line">        &lt;append&gt;true&lt;/append&gt;  </div><div class="line">        &lt;encoder class=&quot;ch.qos.logback.classic.encoder.PatternLayoutEncoder&quot;&gt;  </div><div class="line">            &lt;pattern&gt;%-5p [%d] %C:%L - %m %n&lt;/pattern&gt;  </div><div class="line">            &lt;charset&gt;utf-8&lt;/charset&gt;  </div><div class="line">        &lt;/encoder&gt;  </div><div class="line">        &lt;!-- 此日志文件只记录info级别，不记录大于info级别的日志 --&gt;  </div><div class="line">        &lt;filter class=&quot;ch.qos.logback.classic.filter.LevelFilter&quot;&gt;  </div><div class="line">            &lt;level&gt;INFO&lt;/level&gt;  </div><div class="line">            &lt;onMatch&gt;ACCEPT&lt;/onMatch&gt;  </div><div class="line">            &lt;onMismatch&gt;DENY&lt;/onMismatch&gt;  </div><div class="line">        &lt;/filter&gt;  </div><div class="line">    &lt;/appender&gt;  </div><div class="line"></div><div class="line"></div><div class="line">    &lt;appender name=&quot;FILEDEBUG&quot; class=&quot;ch.qos.logback.core.rolling.RollingFileAppender&quot;&gt;  </div><div class="line">        &lt;file&gt;$&#123;LOG_PATH&#125;/log_debug.log&lt;/file&gt;  </div><div class="line">        &lt;rollingPolicy class=&quot;ch.qos.logback.core.rolling.TimeBasedRollingPolicy&quot;&gt;  </div><div class="line">            &lt;fileNamePattern&gt;$&#123;LOG_PATH&#125;/log-debug-%d&#123;yyyy-MM-dd&#125;.%i.log&lt;/fileNamePattern&gt;  </div><div class="line">            &lt;timeBasedFileNamingAndTriggeringPolicy class=&quot;ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP&quot;&gt;  </div><div class="line">                &lt;maxFileSize&gt;2MB&lt;/maxFileSize&gt;  </div><div class="line">            &lt;/timeBasedFileNamingAndTriggeringPolicy&gt;  </div><div class="line">        &lt;/rollingPolicy&gt;  </div><div class="line">        &lt;append&gt;true&lt;/append&gt;  </div><div class="line">        &lt;encoder class=&quot;ch.qos.logback.classic.encoder.PatternLayoutEncoder&quot;&gt;  </div><div class="line">            &lt;pattern&gt;%-5p [%d] %C:%L - %m %n&lt;/pattern&gt;  </div><div class="line">            &lt;charset&gt;utf-8&lt;/charset&gt;  </div><div class="line">        &lt;/encoder&gt;  </div><div class="line">        &lt;!-- 此日志文件只记录debug级别，不记录大于debug级别的日志 --&gt;  </div><div class="line">        &lt;filter class=&quot;ch.qos.logback.classic.filter.LevelFilter&quot;&gt;  </div><div class="line">            &lt;level&gt;DEBUG&lt;/level&gt;  </div><div class="line">            &lt;onMatch&gt;ACCEPT&lt;/onMatch&gt;  </div><div class="line">            &lt;onMismatch&gt;DENY&lt;/onMismatch&gt;  </div><div class="line">        &lt;/filter&gt;  </div><div class="line">    &lt;/appender&gt;  </div><div class="line"></div><div class="line">    &lt;appender name=&quot;stdout&quot; class=&quot;ch.qos.logback.core.ConsoleAppender&quot;&gt;  </div><div class="line">        &lt;Target&gt;System.out&lt;/Target&gt;  </div><div class="line">        &lt;encoder&gt;  </div><div class="line">            &lt;pattern&gt;%-5p [%d] %C:%L - %m %n&lt;/pattern&gt;  </div><div class="line">            &lt;charset&gt;utf-8&lt;/charset&gt;  </div><div class="line">        &lt;/encoder&gt;  </div><div class="line">        &lt;!-- 此日志appender是为开发使用，只配置最底级别，控制台输出的日志级别是大于或等于此级别的日志信息--&gt;  </div><div class="line">        &lt;filter class=&quot;ch.qos.logback.classic.filter.ThresholdFilter&quot;&gt;  </div><div class="line">            &lt;level&gt;DEBUG&lt;/level&gt;  </div><div class="line">        &lt;/filter&gt;  </div><div class="line">    &lt;/appender&gt;  </div><div class="line">    &lt;!-- 为单独的包配置日志级别，若root的级别大于此级别， 此处级别也会输出  </div><div class="line">        应用场景：生产环境一般不会将日志级别设置为trace或debug，但是为详细的记录SQL语句的情况，  </div><div class="line">        可将hibernate的级别设置为debug，如此一来，日志文件中就会出现hibernate的debug级别日志，  </div><div class="line">        而其它包则会按root的级别输出日志  </div><div class="line">    --&gt;  </div><div class="line">    &lt;logger name=&quot;org.hibernate.SQL&quot; level=&quot;DEBUG&quot; /&gt;  </div><div class="line">    &lt;logger name=&quot;org.hibernate.jdbc&quot; level=&quot;DEBUG&quot;/&gt;  </div><div class="line">    &lt;logger name=&quot;org.springframework&quot; level=&quot;DEBUG&quot;/&gt;  </div><div class="line"></div><div class="line"></div><div class="line">    &lt;!-- 生产环境，将此级别配置为适合的级别，以名日志文件太多或影响程序性能 --&gt;  </div><div class="line">    &lt;root level=&quot;INFO&quot;&gt;  </div><div class="line">        &lt;appender-ref ref=&quot;FILEDEBUG&quot; /&gt;  </div><div class="line">        &lt;appender-ref ref=&quot;FILEINFO&quot; /&gt;  </div><div class="line">        &lt;appender-ref ref=&quot;FILEWARN&quot; /&gt;  </div><div class="line">        &lt;appender-ref ref=&quot;FILEERROR&quot; /&gt;  </div><div class="line">        &lt;!-- 生产环境将请stdout去掉 --&gt;  </div><div class="line">        &lt;appender-ref ref=&quot;stdout&quot; /&gt;  </div><div class="line">    &lt;/root&gt;  </div><div class="line">&lt;/configuration&gt;</div></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/logback/" rel="tag"># logback</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/09/29/Tool插件/" rel="next" title="Linux下安装eclipse以及配置spring-tool-suite插件">
+                <i class="fa fa-chevron-left"></i> Linux下安装eclipse以及配置spring-tool-suite插件
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2017/11/21/java学习之log日志/"
+           data-title="java学习之logback" data-url="http://summer.com/2017/11/21/java学习之log日志/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/blog.png"
+               alt="liyan" />
+          <p class="site-author-name" itemprop="name">liyan</p>
+           
+              <p class="site-description motion-element" itemprop="description">面向太阳，不问春暖花开，只求快乐面对</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">10</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">8</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/ily11" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/u/2157135103/home?topnav=1&wvr=6" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://fantasticzhang.gtensor.com/" title="fantastic" target="_blank">fantastic</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.airghc.top" title="airghc" target="_blank">airghc</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://ymwdq.github.io" title="ymwdq" target="_blank">ymwdq</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#简介"><span class="nav-number">1.</span> <span class="nav-text">简介</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Logback的核心对象：Logger、Appender、Layout"><span class="nav-number">2.</span> <span class="nav-text">Logback的核心对象：Logger、Appender、Layout</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Level-有效级别"><span class="nav-number">3.</span> <span class="nav-text">Level 有效级别</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#过滤器"><span class="nav-number">4.</span> <span class="nav-text">过滤器</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置"><span class="nav-number">5.</span> <span class="nav-text">配置</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2017</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">liyan</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"ily11"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>
