@@ -1,0 +1,863 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next pisces use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css" />
+
+
+  <meta name="keywords" content="Quartz," />
+
+
+
+
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico?v=5.1.0" />
+
+
+
+
+
+
+<meta name="description" content="需求描述有三个任务，jobA、jobB、jobC需要部署在两台服务器A、B上，  其中jobA操作数据库，所以jobA一次只能在一台服务器上运行，不能在服务器A、B上同时运行； jobB虽然不操作数据库，但也有相同需求，就是不能同时在两台服务器上运行； jobC可以同时在两台服务器上运行；  则jobA和jobB需要用到Quartz集群配置，jobC需要非集群配置。 Quartz的集群是依靠数据库">
+<meta name="keywords" content="Quartz">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Quartz集群与非集群配置--基于Spring">
+<meta property="og:url" content="http://summer.com/2018/01/29/Quartz集群与非集群配置-基于Spring/index.html">
+<meta property="og:site_name" content="ily的博客">
+<meta property="og:description" content="需求描述有三个任务，jobA、jobB、jobC需要部署在两台服务器A、B上，  其中jobA操作数据库，所以jobA一次只能在一台服务器上运行，不能在服务器A、B上同时运行； jobB虽然不操作数据库，但也有相同需求，就是不能同时在两台服务器上运行； jobC可以同时在两台服务器上运行；  则jobA和jobB需要用到Quartz集群配置，jobC需要非集群配置。 Quartz的集群是依靠数据库">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://summer.com/images/mysql1.png">
+<meta property="og:image" content="http://summer.com/images/mysql2.png">
+<meta property="og:image" content="http://summer.com/images/new1.png">
+<meta property="og:image" content="http://summer.com/images/new2.png">
+<meta property="og:image" content="http://summer.com/images/new3.png">
+<meta property="og:image" content="http://summer.com/images/quartz1.png">
+<meta property="og:image" content="http://summer.com/images/quartz2.png">
+<meta property="og:image" content="http://summer.com/images/quartz3.png">
+<meta property="og:image" content="http://summer.com/images/quartz4.png">
+<meta property="og:image" content="http://summer.com/images/result1.png">
+<meta property="og:image" content="http://summer.com/images/result2.png">
+<meta property="og:image" content="http://summer.com/images/result3.png">
+<meta property="og:updated_time" content="2018-01-30T02:39:17.379Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Quartz集群与非集群配置--基于Spring">
+<meta name="twitter:description" content="需求描述有三个任务，jobA、jobB、jobC需要部署在两台服务器A、B上，  其中jobA操作数据库，所以jobA一次只能在一台服务器上运行，不能在服务器A、B上同时运行； jobB虽然不操作数据库，但也有相同需求，就是不能同时在两台服务器上运行； jobC可以同时在两台服务器上运行；  则jobA和jobB需要用到Quartz集群配置，jobC需要非集群配置。 Quartz的集群是依靠数据库">
+<meta name="twitter:image" content="http://summer.com/images/mysql1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"right","display":"post","offset":12,"offset_float":0},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://summer.com/2018/01/29/Quartz集群与非集群配置-基于Spring/"/>
+
+
+
+
+
+  <title> Quartz集群与非集群配置--基于Spring | ily的博客 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?b895f7692c1c70bdd79f8c79193af911";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-right page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">ily的博客</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://summer.com/2018/01/29/Quartz集群与非集群配置-基于Spring/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="liyan">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/blog.png">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="ily的博客">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none;" itemprop="url image" alt="ily的博客" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Quartz集群与非集群配置--基于Spring
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-01-29T15:17:35+08:00">
+                2018-01-29
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/spring/" itemprop="url" rel="index">
+                    <span itemprop="name">spring</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                <span class="post-meta-divider">|</span>
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-comment-o"></i>
+                </span>
+                <a href="/2018/01/29/Quartz集群与非集群配置-基于Spring/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2018/01/29/Quartz集群与非集群配置-基于Spring/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="需求描述"><a href="#需求描述" class="headerlink" title="需求描述"></a>需求描述</h3><p>有三个任务，jobA、jobB、jobC需要部署在两台服务器A、B上，</p>
+<ul>
+<li>其中jobA操作数据库，所以jobA一次只能在一台服务器上运行，不能在服务器A、B上同时运行；</li>
+<li>jobB虽然不操作数据库，但也有相同需求，就是不能同时在两台服务器上运行；</li>
+<li>jobC可以同时在两台服务器上运行；</li>
+</ul>
+<p>则jobA和jobB需要用到Quartz集群配置，jobC需要非集群配置。</p>
+<p>Quartz的集群是依靠数据库实现的，是依靠数据库来监控到底是哪个quartz去执行了这个任务，然后让别的quartz不再执行这个任务。</p>
+<p>我们需要先去<a href="http://www.quartz-scheduler.org/downloads/" target="_blank" rel="external">Quartz官网</a>下载相应版本的Quartz，然后解压，在/docs/dbTables文件夹下，会有各个数据库版本的sql文件，我们用的是mySQL数据库，所以我选择的是tables_mysql_innodb.sql文件：</p>
+<p><img src="/images/mysql1.png" alt=""></p>
+<p>新建数据库quartz，然后运行tables_mysql_innodb.sql文件，会创建11张表，Quartz就是靠这11张表来实现集群的。</p>
+<p><img src="/images/mysql2.png" alt=""></p>
+<p>接下来就是创建Gradle项目，实现Quartz集群配置。</p>
+<h3 id="创建Gradle项目"><a href="#创建Gradle项目" class="headerlink" title="创建Gradle项目"></a>创建Gradle项目</h3><p>首先新建Gradle项目：</p>
+<p><img src="/images/new1.png" alt=""></p>
+<p>然后填写GroupId和ArtifactId：</p>
+<p><img src="/images/new2.png" alt=""></p>
+<p>下一步需要将前两项勾选上，这样IDEA会帮我们创建相应的项目文件夹：</p>
+<p><img src="/images/new3.png" alt=""></p>
+<p>这样一个空的项目就搭建起来了。</p>
+<h3 id="配置build-gradle"><a href="#配置build-gradle" class="headerlink" title="配置build.gradle"></a>配置build.gradle</h3><p>要想使用Quartz需要先添加相应依赖，我们实现的Quartz是要结合Spring的，所以也要引进Spring的相应依赖：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div></pre></td><td class="code"><pre><div class="line">dependencies &#123;</div><div class="line">    def springframeworkVersion = &apos;4.3.7.RELEASE&apos;</div><div class="line">    def springSecurityVersion = &apos;4.2.1.RELEASE&apos;</div><div class="line">    def typeSafeVersion = &apos;1.3.1&apos;</div><div class="line">    def logbackVersion = &apos;1.2.1&apos;</div><div class="line">    def groovyVersion = &apos;2.4.9&apos;</div><div class="line"></div><div class="line">    // The production code uses the SLF4J logging API at compile time</div><div class="line">    compile &apos;org.slf4j:slf4j-api:1.7.13&apos;</div><div class="line">    compile &quot;com.typesafe:config:$&#123;typeSafeVersion&#125;&quot;</div><div class="line">    compile &quot;ch.qos.logback:logback-core:$&#123;logbackVersion&#125;&quot;</div><div class="line">    compile &quot;ch.qos.logback:logback-access:$&#123;logbackVersion&#125;&quot;</div><div class="line">    compile &quot;ch.qos.logback:logback-classic:$&#123;logbackVersion&#125;&quot;</div><div class="line">    compile &quot;org.codehaus.groovy:groovy-all:$&#123;groovyVersion&#125;&quot;</div><div class="line">    //spring4</div><div class="line">    compile &quot;org.springframework:spring-test:$&#123;springframeworkVersion&#125;&quot;</div><div class="line">    compile &quot;org.springframework:spring-context:$&#123;springframeworkVersion&#125;&quot;</div><div class="line">    compile &quot;org.springframework:spring-context-support:$&#123;springframeworkVersion&#125;&quot;</div><div class="line">    compile &quot;org.springframework:spring-tx:$&#123;springframeworkVersion&#125;&quot;</div><div class="line">    compile &quot;org.springframework:spring-webmvc:$&#123;springframeworkVersion&#125;&quot;</div><div class="line">    compile &quot;org.springframework:spring-jdbc:$&#123;springframeworkVersion&#125;&quot;</div><div class="line">    compile &quot;org.springframework.security:spring-security-taglibs:$&#123;springSecurityVersion&#125;&quot;</div><div class="line">    compile &quot;org.springframework.security:spring-security-config:$&#123;springSecurityVersion&#125;&quot;</div><div class="line">    compile &quot;org.springframework.security:spring-security-cas:$&#123;springSecurityVersion&#125;&quot;</div><div class="line">    //mysql connect</div><div class="line">    compile group: &apos;mysql&apos;, name: &apos;mysql-connector-java&apos;, version: &apos;6.0.6&apos;</div><div class="line">    compile &quot;org.quartz-scheduler:quartz:2.2.3&quot;</div><div class="line">    testCompile &apos;junit:junit:4.12&apos;</div><div class="line">    testCompile group: &apos;javax.servlet&apos;, name: &apos;javax.servlet-api&apos;, version: &apos;3.1.0&apos;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="quartz集群与非集群配置"><a href="#quartz集群与非集群配置" class="headerlink" title="quartz集群与非集群配置"></a>quartz集群与非集群配置</h3><p>在同一个项目同时实现集群和非集群，就需要写两个调度配置，然后配置调度器，设置特定时间启动，然后再配置相应的job。具体配置如下：</p>
+<h4 id="非集群配置"><a href="#非集群配置" class="headerlink" title="非集群配置"></a>非集群配置</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">&lt;!-- 非集群配置调度器\触发器\job --&gt;</div><div class="line">    &lt;bean name=&quot;quartzScheduler2&quot; lazy-init=&quot;false&quot; autowire=&quot;no&quot;</div><div class="line">          class=&quot;org.springframework.scheduling.quartz.SchedulerFactoryBean &quot;&gt;</div><div class="line">        &lt;property name=&quot;applicationContextSchedulerContextKey&quot; value=&quot;applicationContextKey&quot;/&gt;</div><div class="line">        &lt;property name=&quot;triggers&quot;&gt;</div><div class="line">            &lt;list&gt;</div><div class="line">                &lt;ref bean=&quot;jobCTaskTrigger&quot;/&gt;</div><div class="line">            &lt;/list&gt;</div><div class="line">        &lt;/property&gt;</div><div class="line">    &lt;/bean&gt;</div></pre></td></tr></table></figure>
+<p>将使用非集群的任务调度器放在<code>&lt;property name=&quot;triggers&quot;&gt;</code>的<code>&lt;list&gt;</code>里，然后再配置触发器和相应的job：</p>
+<p><img src="/images/quartz1.png" alt=""></p>
+<p>首先触发器的<code>cronExpression</code>定义job的触发时间，<code>jobDetail</code>是job的实例，JobDetail是在Job被添加到Scheduler时由应用程序创建的，它包含了关于Job的各种属性信息。当触发器激活时，与他关联的JobDetail 被加载，然后就会找到本例中的jobC类的doJob方法并执行。</p>
+<h4 id="集群配置"><a href="#集群配置" class="headerlink" title="集群配置"></a>集群配置</h4><p>本例中是将Quartz的一些集群配置直接整合到xml文件里了，也可以在quartz.properties里配置。<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div></pre></td><td class="code"><pre><div class="line">&lt;!-- 配置调度器\触发器\job --&gt;</div><div class="line">    &lt;bean id=&quot;clusterQuartzScheduler&quot; name=&quot;quartzScheduler&quot; lazy-init=&quot;false&quot; autowire=&quot;no&quot; class=&quot;org.springframework.scheduling.quartz.SchedulerFactoryBean &quot;&gt;</div><div class="line">        &lt;property name=&quot;dataSource&quot; ref=&quot;dataSource&quot;/&gt;</div><div class="line">        &lt;!--  quartz配置文件路径--&gt;</div><div class="line">        &lt;!--&lt;property name=&quot;configLocation&quot; value=&quot;classpath:quartz.properties&quot; /&gt;--&gt;</div><div class="line"></div><div class="line">        &lt;property name=&quot;quartzProperties&quot;&gt;</div><div class="line">            &lt;props&gt;</div><div class="line">                &lt;prop key=&quot;org.quartz.scheduler.instanceName&quot;&gt;TaskManager_Scheduler&lt;/prop&gt;</div><div class="line">                &lt;prop key=&quot;org.quartz.scheduler.instanceId&quot;&gt;AUTO&lt;/prop&gt;</div><div class="line">                &lt;!-- 线程池配置 --&gt;</div><div class="line">                &lt;prop key=&quot;org.quartz.threadPool.class&quot;&gt;org.quartz.simpl.SimpleThreadPool&lt;/prop&gt;</div><div class="line">                &lt;prop key=&quot;org.quartz.threadPool.threadCount&quot;&gt;20&lt;/prop&gt;</div><div class="line">                &lt;prop key=&quot;org.quartz.threadPool.threadPriority&quot;&gt;5&lt;/prop&gt;</div><div class="line">                &lt;!-- JobStore 配置 1.如下使用数据库 2.使用内存 org.quartz.simpl.RAMJobStore --&gt;</div><div class="line">                &lt;prop key=&quot;org.quartz.jobStore.class&quot;&gt;org.quartz.impl.jdbcjobstore.JobStoreTX&lt;/prop&gt;</div><div class="line"></div><div class="line">                &lt;!-- 集群配置 --&gt;</div><div class="line">                &lt;!--通知Scheduler实例要它参与到一个集群当中--&gt;</div><div class="line">                &lt;prop key=&quot;org.quartz.jobStore.isClustered&quot;&gt;true&lt;/prop&gt;</div><div class="line">                &lt;!--定义了Scheduler实例检入到数据库中的频率(单位：毫秒)--&gt;</div><div class="line">                &lt;prop key=&quot;org.quartz.jobStore.clusterCheckinInterval&quot;&gt;15000&lt;/prop&gt;</div><div class="line">                &lt;prop key=&quot;org.quartz.jobStore.maxMisfiresToHandleAtATime&quot;&gt;1&lt;/prop&gt;</div><div class="line">                &lt;prop key=&quot;org.quartz.jobStore.misfireThreshold&quot;&gt;120000&lt;/prop&gt;</div><div class="line">                &lt;prop key=&quot;org.quartz.jobStore.tablePrefix&quot;&gt;QRTZ_&lt;/prop&gt;</div><div class="line">            &lt;/props&gt;</div><div class="line">        &lt;/property&gt;</div><div class="line">        &lt;property name=&quot;schedulerName&quot; value=&quot;TaskManagerScheduler&quot;/&gt;</div><div class="line"></div><div class="line">        &lt;!--必须的，QuartzScheduler 延时启动，应用启动完后 QuartzScheduler 再启动 --&gt;</div><div class="line">        &lt;property name=&quot;startupDelay&quot; value=&quot;3&quot;/&gt;</div><div class="line"></div><div class="line">        &lt;!--可选，QuartzScheduler 启动时更新己存在的Job，这样就不用每次修改targetObject后删除qrtz_job_details表对应记录了 --&gt;</div><div class="line">        &lt;property name=&quot;overwriteExistingJobs&quot; value=&quot;true&quot;/&gt;</div><div class="line"></div><div class="line">        &lt;!-- 设置自动启动 --&gt;</div><div class="line">        &lt;property name=&quot;autoStartup&quot; value=&quot;true&quot;/&gt;</div><div class="line"></div><div class="line">        &lt;!--具体Trigger配置--&gt;</div><div class="line">        &lt;property name=&quot;applicationContextSchedulerContextKey&quot; value=&quot;applicationContextKey&quot;/&gt;</div><div class="line">        &lt;property name=&quot;triggers&quot;&gt;</div><div class="line">            &lt;list&gt;</div><div class="line">                &lt;ref bean=&quot;jobAATaskTrigger&quot;/&gt;</div><div class="line">                &lt;ref bean=&quot;jobBBTaskTrigger&quot;/&gt;</div><div class="line">                &lt;!--&lt;ref bean=&quot;jobCTaskTrigger&quot;/&gt;--&gt;</div><div class="line">            &lt;/list&gt;</div><div class="line">        &lt;/property&gt;</div><div class="line">    &lt;/bean&gt;</div></pre></td></tr></table></figure></p>
+<p><img src="/images/quartz2.png" alt=""></p>
+<p>因为我们是用数据库来实现集群的，所以需要将“org.quartz.jobStore.class”值设置为“org.quartz.impl.jdbcjobstore.JobStoreTX”，如果想使用内存存储，只需要将其值设置为“org.quartz.simpl.RAMJobStore”即可。但是内存存储无法实现持久化。</p>
+<p>“org.quartz.jobStore.isClustered”的值设置为“true”，即代表该Scheduler下的job参与到一个集群当中。</p>
+<p><img src="/images/quartz3.png" alt=""></p>
+<p>触发器的配置跟非集群的配置相同，配置定时时间和job实例。</p>
+<p><img src="/images/quartz4.png" alt=""></p>
+<p>在Spring中使用Quartz有两种方式实现：</p>
+<ul>
+<li>利用JobDetailBean包装QuartzJobBean子类（即Job类）的实例。</li>
+<li>利用MethodInvokingJobDetailFactoryBean工厂Bean包装普通的Java对象（即Job类），是在配置文件里定义任务类和要执行的方法，类和方法仍然是普通类。</li>
+</ul>
+<p>具体说明：</p>
+<p>1、采用第一种方法必须要继承QuartzJobBean，实现 executeInternal(JobExecutionContext jobexecutioncontext)方法，此方法就是被调度任务的执行体，然后将此Job类的实例直接配置到JobDetailBean中即可。</p>
+<p>2、采用第二种方法 创建Job类，无须继承父类，直接配置MethodInvokingJobDetailFactoryBean即可。但需要指定一下两个属性：</p>
+<ul>
+<li><p>targetObject：指定包含任务执行体的Bean实例。</p>
+</li>
+<li><p>targetMethod:指定将指定Bean实例的该方法包装成任务的执行体。</p>
+</li>
+</ul>
+<p>由于集群需要把定时任务的信息写入表，需要序列化，但MethodInvokingJobDetailFactoryBean 不能序列化，会报错。所以我们采用第一种方式。</p>
+<p>首先重写JobDetailBean类：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div><div class="line">28</div><div class="line">29</div><div class="line">30</div><div class="line">31</div><div class="line">32</div><div class="line">33</div><div class="line">34</div><div class="line">35</div><div class="line">36</div><div class="line">37</div><div class="line">38</div><div class="line">39</div><div class="line">40</div><div class="line">41</div><div class="line">42</div><div class="line">43</div><div class="line">44</div><div class="line">45</div><div class="line">46</div><div class="line">47</div><div class="line">48</div><div class="line">49</div><div class="line">50</div><div class="line">51</div><div class="line">52</div></pre></td><td class="code"><pre><div class="line">package com.bupt.common;</div><div class="line"></div><div class="line">import org.quartz.JobExecutionContext;</div><div class="line">import org.quartz.JobExecutionException;</div><div class="line">import org.slf4j.Logger;</div><div class="line">import org.slf4j.LoggerFactory;</div><div class="line">import org.springframework.context.ApplicationContext;</div><div class="line">import org.springframework.scheduling.quartz.QuartzJobBean;</div><div class="line"></div><div class="line">import java.lang.reflect.Method;</div><div class="line"></div><div class="line">public class JobDetailBean extends QuartzJobBean &#123;</div><div class="line"></div><div class="line"></div><div class="line">    private Logger logger = LoggerFactory.getLogger(JobDetailBean.class);</div><div class="line"></div><div class="line">    private String targetObject;</div><div class="line">    private String targetMethod;</div><div class="line">    private static ApplicationContext ctx;</div><div class="line"></div><div class="line">    @Override</div><div class="line">    protected void executeInternal(JobExecutionContext context) throws JobExecutionException &#123;</div><div class="line"></div><div class="line">        try &#123;</div><div class="line">            Object ctxBean = ctx.getBean(this.targetObject);</div><div class="line">            try &#123;</div><div class="line">                Method m = ctxBean.getClass().getMethod(targetMethod);</div><div class="line">                m.invoke(ctxBean);</div><div class="line">            &#125; catch (SecurityException e) &#123;</div><div class="line">                logger.error(e.toString());</div><div class="line">                e.printStackTrace();</div><div class="line">            &#125; catch (NoSuchMethodException e) &#123;</div><div class="line">                logger.error(e.toString());</div><div class="line">                e.printStackTrace();</div><div class="line">            &#125;</div><div class="line">        &#125; catch (Exception e) &#123;</div><div class="line">            throw new JobExecutionException(e);</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public static void setApplicationContext(ApplicationContext applicationContext) &#123;</div><div class="line">        ctx = applicationContext;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void setTargetObject(String targetObject) &#123;</div><div class="line">        this.targetObject = targetObject;</div><div class="line">    &#125;</div><div class="line"></div><div class="line">    public void setTargetMethod(String targetMethod) &#123;</div><div class="line">        this.targetMethod = targetMethod;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>所以在配置job的时候，需要指定jobClass，指向重写的类。</p>
+<h3 id="主函数"><a href="#主函数" class="headerlink" title="主函数"></a>主函数</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div></pre></td><td class="code"><pre><div class="line">public class MainProgram &#123;</div><div class="line">    final static Logger logger = LoggerFactory.getLogger(MainProgram.class);</div><div class="line">    public static void main(String[] args)&#123;</div><div class="line">        try&#123;</div><div class="line">            System.out.println(&quot;开始执行任务。。。。。&quot;);</div><div class="line">            AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext(&quot;com.bupt.config&quot;);</div><div class="line">            JobDetailBean.setApplicationContext(ctx);</div><div class="line">        &#125;catch (Exception e)&#123;</div><div class="line">            logger.error(e.getMessage());</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<p>首先指定配置文件，然后在引入到JobDetailBean里，这样程序就会读取配置文件，执行调度器，触发触发器，加载关联的JobDetail。</p>
+<h3 id="job类"><a href="#job类" class="headerlink" title="job类"></a>job类</h3><h4 id="jobAA"><a href="#jobAA" class="headerlink" title="jobAA"></a>jobAA</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div></pre></td><td class="code"><pre><div class="line">@Service(&quot;jobAA&quot;)</div><div class="line">public class jobAA &#123;</div><div class="line">    public void doJob() throws Exception&#123;</div><div class="line">        //设置日期格式</div><div class="line">        SimpleDateFormat df = new SimpleDateFormat(&quot;yyyy-MM-dd HH:mm:ss&quot;);</div><div class="line">        //1.加载驱动程序</div><div class="line">        Class.forName(&quot;com.mysql.jdbc.Driver&quot;);</div><div class="line">        String url = &quot;jdbc:mysql://127.0.0.1:3306/quartz?characterEncoding=utf-8&amp;autoReconnect=true&amp;autoReconnectForPools=true&amp;useSSL=false&quot;;</div><div class="line">        String name = &quot;root&quot;;</div><div class="line">        String password = &quot;123456&quot;;</div><div class="line">        //2.获得数据库的连接</div><div class="line">        Connection conn = DriverManager.getConnection(url, name, password);</div><div class="line">        //3.通过数据库的连接操作数据库，实现增删改查</div><div class="line">        Statement stmt = conn.createStatement();</div><div class="line">        Boolean result = stmt.execute(&quot;UPDATE quartz.Student SET age = &apos;8&apos; WHERE id=2;&quot;);</div><div class="line">        ResultSet age = stmt.executeQuery(&quot;SELECT age FROM quartz.Student WHERE id=2;&quot;);</div><div class="line">        if(!result)&#123;</div><div class="line">            System.out.println(df.format(new Date()) + &quot;  执行job1AAAA任务。。。。。&quot;);</div><div class="line">            while (age.next())&#123;</div><div class="line">                System.out.println(df.format(new Date()) + &quot;  job1A任务。。。。。&quot; +age.getString(&quot;age&quot;));</div><div class="line">            &#125;</div><div class="line">//            System.out.println(df.format(new Date()) + &quot;  job1A任务。。。。。&quot; +age.getString(&quot;age&quot;));</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="jobBB"><a href="#jobBB" class="headerlink" title="jobBB"></a>jobBB</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div></pre></td><td class="code"><pre><div class="line">@Service(&quot;jobBB&quot;)</div><div class="line">public class jobBB &#123;</div><div class="line">    public void doJob() throws Exception&#123;</div><div class="line">        SimpleDateFormat df = new SimpleDateFormat(&quot;yyyy-MM-dd HH:mm:ss&quot;);//设置日期格式</div><div class="line">        System.out.println(df.format(new Date()) + &quot;  执行jobBBBB任务。。。。。&quot;);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h4 id="jobC"><a href="#jobC" class="headerlink" title="jobC"></a>jobC</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">@Service(&quot;jobC&quot;)</div><div class="line">public class jobC &#123;</div><div class="line">    public void doJob() throws Exception&#123;</div><div class="line">        //设置日期格式</div><div class="line">        SimpleDateFormat df = new SimpleDateFormat(&quot;yyyy-MM-dd HH:mm:ss&quot;);</div><div class="line">        System.out.println(df.format(new Date()) + &quot;  执行jobCCCC任务。。。。。&quot;);</div><div class="line">    &#125;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h3 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h3><p>再新建一个项目，项目结构和代码跟上面讲的一模一样，然后运行，根据输出结果会发现，jobAA和jobBB每次只会在一台机器上运行，而jobC两台机器同时运行。</p>
+<p><img src="/images/result1.png" alt=""> <img src="/images/result2.png" alt=""></p>
+<p><img src="/images/result3.png" alt=""></p>
+<p>从上图也可以看出，当我停掉一台机器时，另一台会马上把jobAA和jobBB的任务结果来继续执行。</p>
+<p>完整代码在我的github上<a href="https://github.com/ily11/quartzCluster" target="_blank" rel="external">https://github.com/ily11/quartzCluster</a></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Quartz/" rel="tag"># Quartz</a>
+          
+        </div>
+      
+
+      
+        
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/11/24/IDEA-文件格式问题/" rel="next" title="IDEA 文件格式问题">
+                <i class="fa fa-chevron-left"></i> IDEA 文件格式问题
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+          
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2018/01/29/Quartz集群与非集群配置-基于Spring/"
+           data-title="Quartz集群与非集群配置--基于Spring" data-url="http://summer.com/2018/01/29/Quartz集群与非集群配置-基于Spring/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap" >
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image"
+               src="/images/blog.png"
+               alt="liyan" />
+          <p class="site-author-name" itemprop="name">liyan</p>
+           
+              <p class="site-description motion-element" itemprop="description">面向太阳，不问春暖花开，只求快乐面对</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+        
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">9</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">11</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/ily11" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/u/2157135103/home?topnav=1&wvr=6" target="_blank" title="微博">
+                  
+                    <i class="fa fa-fw fa-globe"></i>
+                  
+                  微博
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              Links
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://fantasticzhang.gtensor.com/" title="fantastic" target="_blank">fantastic</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://www.airghc.top" title="airghc" target="_blank">airghc</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://ymwdq.github.io" title="ymwdq" target="_blank">ymwdq</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#需求描述"><span class="nav-number">1.</span> <span class="nav-text">需求描述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建Gradle项目"><span class="nav-number">2.</span> <span class="nav-text">创建Gradle项目</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#配置build-gradle"><span class="nav-number">3.</span> <span class="nav-text">配置build.gradle</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#quartz集群与非集群配置"><span class="nav-number">4.</span> <span class="nav-text">quartz集群与非集群配置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#非集群配置"><span class="nav-number">4.1.</span> <span class="nav-text">非集群配置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#集群配置"><span class="nav-number">4.2.</span> <span class="nav-text">集群配置</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#主函数"><span class="nav-number">5.</span> <span class="nav-text">主函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#job类"><span class="nav-number">6.</span> <span class="nav-text">job类</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#jobAA"><span class="nav-number">6.1.</span> <span class="nav-text">jobAA</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#jobBB"><span class="nav-number">6.2.</span> <span class="nav-text">jobBB</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#jobC"><span class="nav-number">6.3.</span> <span class="nav-text">jobC</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#运行结果"><span class="nav-number">7.</span> <span class="nav-text">运行结果</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright" >
+  
+  &copy; 
+  <span itemprop="copyrightYear">2018</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">liyan</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+    
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"ily11"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+  
+
+</body>
+</html>
